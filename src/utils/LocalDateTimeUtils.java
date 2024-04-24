@@ -4,6 +4,7 @@ package utils;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -26,6 +27,11 @@ public class LocalDateTimeUtils {
     private static final DateTimeFormatter DATE_YEAR_NUM = DateTimeFormatter.ofPattern("yyyy");
 
     private static final String[][] WEEK_ARRAY = {{"MONDAY", "1"}, {"TUESDAY", "2"}, {"WEDNESDAY", "3"}, {"THURSDAY", "4"}, {"FRIDAY", "5"}, {"SATURDAY", "6"}, {"SUNDAY", "7"}};
+
+
+    private static final Integer TEN = 10;
+
+    private static final Integer THIRTEEN = 13;
 
     private LocalDateTimeUtils() {
         throw new AssertionError();
@@ -83,6 +89,11 @@ public class LocalDateTimeUtils {
      * @return
      */
     public static LocalDate dateToLocalDate(Date date) {
+
+        if (date == null){
+            return null;
+        }
+
         return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
@@ -92,6 +103,9 @@ public class LocalDateTimeUtils {
      * @return
      */
     public static Long dateTOTimeStamp(Date date){
+        if (date == null){
+            return null;
+        }
         LocalDateTime localDateTime = dateToLocalDateTime(date);
         return localDateTime.toInstant(ZoneOffset.of("+8")).toEpochMilli();
     }
@@ -117,6 +131,9 @@ public class LocalDateTimeUtils {
      * @return
      */
     public static String dateToDateStr(Date date) {
+        if (date == null){
+            return null;
+        }
         return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(DATE_FORMATTER);
     }
 
@@ -137,18 +154,12 @@ public class LocalDateTimeUtils {
     /**
      * 根据时间戳获取时间（秒级别）
      * @param timeStamp 时间戳
-     * @return LocalDateTime
-     */
-    public static LocalDateTime  timeStampToLocalDateTime(Long timeStamp){
-        return LocalDateTime.ofEpochSecond(timeStamp, 0, ZoneOffset.ofHours(8));
-    }
-
-    /**
-     * 根据时间戳获取时间（秒级别）
-     * @param timeStamp 时间戳
      * @return Date
      */
     public static Date timeStampToDate(Long timeStamp){
+        if (timeStamp == null){
+            return null;
+        }
         return Date.from(LocalDateTime.ofEpochSecond(timeStamp, 0, ZoneOffset.ofHours(8)).atZone(ZoneId.systemDefault()).toInstant());
     }
     /**
@@ -157,6 +168,9 @@ public class LocalDateTimeUtils {
      * @return
      */
     public static Date localDateToDate(LocalDate localDate) {
+        if (localDate == null){
+            return null;
+        }
         return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
@@ -166,6 +180,11 @@ public class LocalDateTimeUtils {
      * @localDateTimeToDateStr
      */
     public static Date localDateTimeToDate(LocalDateTime localDateTime) {
+
+        if (localDateTime == null){
+            return null;
+        }
+
         return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
 
@@ -175,6 +194,11 @@ public class LocalDateTimeUtils {
      * @return
      */
     public static String localDateToDateStr(LocalDate localDate) {
+
+        if (localDate == null){
+            return null;
+        }
+
         return localDate.format(DATE_FORMATTER);
     }
 
@@ -185,6 +209,11 @@ public class LocalDateTimeUtils {
      * @return
      */
     public static String localDateTimeToDateStr(LocalDateTime localDateTime) {
+
+        if (localDateTime == null){
+            return null;
+        }
+
         return localDateTime.format(DATE_FORMATTER);
     }
 
@@ -207,7 +236,7 @@ public class LocalDateTimeUtils {
      * @return
      */
     public static LocalDateTime dateTimeStrToLocalDateTime(String dateTimeStr) {
-        if (dateTimeStr == null || "".equals(dateTimeStr)){
+        if (dateTimeStr == null || dateTimeStr.isEmpty()){
             return null;
         }
 
@@ -220,6 +249,11 @@ public class LocalDateTimeUtils {
      * @return
      */
     public static LocalDateTime dateTimeStrToLocalDateHour(String dateTimeStr) {
+
+        if (dateTimeStr == null || dateTimeStr.isEmpty()){
+            return null;
+        }
+
         return LocalDateTime.parse(dateTimeStr, DATE_HOUR_FORMATTER);
     }
 
@@ -229,6 +263,11 @@ public class LocalDateTimeUtils {
      * @return
      */
     public static String localDateTimeToLocalDateHour(LocalDateTime localDateTime) {
+
+        if (localDateTime == null){
+            return null;
+        }
+
         return localDateTime.format(DATE_HOUR_FORMATTER);
     }
 
@@ -238,6 +277,10 @@ public class LocalDateTimeUtils {
      * @return
      */
     public static LocalDate dateStrToLocalDate(String dateStr) {
+        if (dateStr == null || dateStr.isEmpty()){
+            return null;
+        }
+
         return LocalDate.parse(dateStr, DATE_FORMATTER);
     }
 
@@ -247,6 +290,11 @@ public class LocalDateTimeUtils {
      * @return
      */
     public static Date dateStrToDate(String dateStr) {
+
+        if (dateStr == null || dateStr.isEmpty()){
+            return null;
+        }
+
         return Date.from(LocalDate.parse(dateStr, DATE_FORMATTER).atStartOfDay(ZoneId.systemDefault()).toInstant());
 
     }
@@ -258,61 +306,35 @@ public class LocalDateTimeUtils {
      */
     public static Date dateTimeStrToDate(String dateStr) {
 
+        if (dateStr == null || dateStr.isEmpty()){
+            return null;
+        }
+
         return Date.from(LocalDateTime.parse(dateStr, DATE_TIME_FORMATTER).atZone(ZoneId.systemDefault()).toInstant());
 
     }
 
 
     public static Long dateTImeStrToTimeStamp(String dateStr){
+
+        if (dateStr == null || dateStr.isEmpty()){
+            return null;
+        }
+
        return dateTOTimeStamp(dateTimeStrToDate(dateStr));
     }
 
-    /**
-     * 比较第一个日期是否小于第二个日期
-     * @param firstDate 第一个日期
-     * @param secondDate 第二个日期
-     * @return true-小于;false-大于
-     */
-    public boolean localDateIsBefore(LocalDate firstDate, LocalDate secondDate) {
-        return firstDate.isBefore(secondDate);
-    }
-
-
-    /**
-     * 比较第一个日期是否大于第二个日期
-     * @param firstDate 第一个日期
-     * @param secondDate 第二个日期
-     * @return true-大于;false-不大于
-     */
-    public boolean localDateIsAfter(LocalDate firstDate, LocalDate secondDate) {
-        return firstDate.isAfter(secondDate);
-    }
-
-    /**
-     * 比较第一个日期是否大于第二个日期
-     * @param firstDate 第一个日期
-     * @param secondDate 第二个日期
-     * @return true-大于;false-不大于
-     */
-    public boolean localDateTimeIsAfter(LocalDateTime firstDate, LocalDateTime secondDate) {
-        return firstDate.isAfter(secondDate);
-    }
-
-    /**
-     * 比较两个日期是否相等
-     * @param firstDate 第一个日期
-     * @param secondDate 第二个日期
-     * @return true-相等;false-不相等
-     */
-    public boolean localDateIsEqual(LocalDate firstDate, LocalDate secondDate) {
-        return firstDate.isEqual(secondDate);
-    }
 
     /**
      * 毫秒级时间戳转LocalDateTime
      * @return LocalDateTime
      */
     public static LocalDateTime millisecondToLocalDateTime(Long millisecond){
+
+        if (millisecond == null){
+            return null;
+        }
+
         return new Date(millisecond).toInstant().atOffset(ZoneOffset.of("+8")).toLocalDateTime();
     }
 
@@ -322,6 +344,11 @@ public class LocalDateTimeUtils {
      * @return Date
      */
     public static Date millisecondToDate(Long millisecond){
+
+        if (millisecond == null){
+            return null;
+        }
+
         return new Date(millisecond);
     }
 
@@ -333,9 +360,14 @@ public class LocalDateTimeUtils {
      */
     public static Long getTimeInterval(Date startTime,Date endTime){
 
-        LocalDateTime startLocalDateTime = LocalDateTimeUtils.dateToLocalDateTime(startTime);
+        if (startTime == null || endTime == null){
+            return 0L;
+        }
 
-        LocalDateTime endLocalDateTime = LocalDateTimeUtils.dateToLocalDateTime(endTime);
+
+        LocalDateTime startLocalDateTime = dateToLocalDateTime(startTime);
+
+        LocalDateTime endLocalDateTime = dateToLocalDateTime(endTime);
 
         Duration duration = Duration.between(startLocalDateTime,endLocalDateTime);
         return duration.toMillis();
@@ -349,11 +381,16 @@ public class LocalDateTimeUtils {
      */
     public static Long getTimeIntervalToMinutes(Date startTime,Date endTime){
 
-        LocalDateTime startLocalDateTime = LocalDateTimeUtils.dateToLocalDateTime(startTime);
+        if (startTime == null || endTime == null){
+            return 0L;
+        }
 
-        LocalDateTime endLocalDateTime = LocalDateTimeUtils.dateToLocalDateTime(endTime);
+        LocalDateTime startLocalDateTime = dateToLocalDateTime(startTime);
+
+        LocalDateTime endLocalDateTime = dateToLocalDateTime(endTime);
 
         Duration duration = Duration.between(startLocalDateTime,endLocalDateTime);
+
         return duration.toMinutes();
     }
 
@@ -372,28 +409,6 @@ public class LocalDateTimeUtils {
 
         Duration duration = Duration.between(startTime,endTime);
         return duration.toMinutes();
-    }
-
-    /**
-     * 得到当前时间到指定时间时间的间隔
-     * @param endTime 结束时间
-     * @return 间隔的毫秒数
-     */
-    public static Long getTimeInterval(LocalDateTime startTime,LocalDateTime endTime,Long time,ChronoUnit unit){
-
-        Duration duration = Duration.between(startTime,endTime.minus(time,unit));
-        return duration.toMillis();
-    }
-
-
-    /**
-     * 得到当前时间到指定时间时间的间隔
-     * @param endTime 结束时间
-     * @return 间隔的毫秒数
-     */
-    public static Long getTimeInterval(LocalDateTime startTime,LocalDateTime endTime){
-        Duration duration = Duration.between(startTime,endTime);
-        return duration.toMillis();
     }
 
     public static long getMinuteDiff(Date date1, Date date2) {
@@ -429,6 +444,11 @@ public class LocalDateTimeUtils {
      * @return 毫秒
      */
     public static Long getToTodayEndMinusForTimeStamp(Long time,ChronoUnit unit){
+
+        if (time == null || unit == null){
+            return 0L;
+        }
+
         LocalDateTime startTime = LocalDateTime.now();
 
         LocalDateTime today_end = LocalDateTime.of(LocalDate.now(), LocalTime.MAX).minus(time,unit);
@@ -446,6 +466,11 @@ public class LocalDateTimeUtils {
      * @return 是否是今天
      */
     public static Boolean isToday(LocalDateTime localDateTime){
+
+        if (localDateTime == null) {
+            return false;
+        }
+
         LocalDate today = LocalDate.now();
 
         LocalDate localDate = localDateTime.toLocalDate();
@@ -462,6 +487,10 @@ public class LocalDateTimeUtils {
      * @return 是否过期
      */
     public static Boolean isExpiredTime(LocalDateTime localDateTime,Long plusTime,ChronoUnit unit){
+
+        if (localDateTime == null || plusTime == null || unit == null){
+            return false;
+        }
 
         LocalDateTime now = LocalDateTime.now();
 
@@ -507,4 +536,60 @@ public class LocalDateTimeUtils {
 
 
     }
+
+
+    /**
+     * 兼容 秒级别和毫秒级别转换为LocalDateTime
+     * @param millisecond 时间戳
+     * @return LocalDateTime
+     */
+    public static LocalDateTime timeStampToLocalDateTime(Long millisecond){
+
+        if (millisecond == null){
+            return null;
+        }
+
+        String time = String.valueOf(millisecond);
+
+        if (time.length() == TEN){
+            return secondToLocalDateTime(millisecond);
+        }
+        else if (time.length() == THIRTEEN){
+            return millisecondToLocalDateTime(millisecond);
+        }
+        else {
+            return null;
+        }
+    }
+
+
+    /**
+     * 根据时间戳获取时间（秒级别）
+     * @param timeStamp 时间戳
+     * @return LocalDateTime
+     */
+    public static LocalDateTime secondToLocalDateTime(Long timeStamp){
+        return LocalDateTime.ofEpochSecond(timeStamp, 0, ZoneOffset.ofHours(8));
+    }
+
+
+    /**
+     * 得到上个月第一天的日期
+     * @return 上个月第一天的日期
+     */
+    public static LocalDateTime getLastMonthFirstDay(){
+        LocalDateTime now = LocalDateTime.now().minusMonths(1);
+        return now.with(TemporalAdjusters.firstDayOfMonth()).withHour(0).withMinute(0).withSecond(0);
+    }
+
+    /**
+     * 得到上个月最后一天的日期
+     * @return 上个月最后一天的日期
+     */
+    public static LocalDateTime getLastMonthLastDay(){
+        LocalDateTime now = LocalDateTime.now().minusMonths(1);
+        return now.with(TemporalAdjusters.lastDayOfMonth()).withHour(23).withMinute(59).withSecond(59);
+    }
+
+
 }
