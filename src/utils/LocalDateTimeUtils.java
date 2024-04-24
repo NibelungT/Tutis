@@ -28,6 +28,7 @@ public class LocalDateTimeUtils {
 
     private static final String[][] WEEK_ARRAY = {{"MONDAY", "1"}, {"TUESDAY", "2"}, {"WEDNESDAY", "3"}, {"THURSDAY", "4"}, {"FRIDAY", "5"}, {"SATURDAY", "6"}, {"SUNDAY", "7"}};
 
+    private static final ZoneId ZONE_ID = ZoneId.systemDefault();
 
     private static final Integer TEN = 10;
 
@@ -73,7 +74,7 @@ public class LocalDateTimeUtils {
      * @return
      */
     public static Long getSecond(){
-        return LocalDateTime.now().toEpochSecond(ZoneOffset.of("+8"));
+        return LocalDateTime.now().toEpochSecond(ZONE_ID.getRules().getOffset(Instant.now()));
     }
 
     /**
@@ -81,7 +82,7 @@ public class LocalDateTimeUtils {
      * @return
      */
     public static Long getMilliSecond(){
-        return LocalDateTime.now().toInstant(ZoneOffset.of("+8")).toEpochMilli();
+        return LocalDateTime.now().toInstant(ZONE_ID.getRules().getOffset(Instant.now())).toEpochMilli();
     }
 
     /**
@@ -94,7 +95,7 @@ public class LocalDateTimeUtils {
             return null;
         }
 
-        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return date.toInstant().atZone(ZONE_ID).toLocalDate();
     }
 
     /**
@@ -107,7 +108,7 @@ public class LocalDateTimeUtils {
             return null;
         }
         LocalDateTime localDateTime = dateToLocalDateTime(date);
-        return localDateTime.toInstant(ZoneOffset.of("+8")).toEpochMilli();
+        return localDateTime.toInstant(ZONE_ID.getRules().getOffset(Instant.now())).toEpochMilli();
     }
 
 
@@ -122,7 +123,7 @@ public class LocalDateTimeUtils {
             return null;
         }
 
-        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        return date.toInstant().atZone(ZONE_ID).toLocalDateTime();
     }
 
     /**
@@ -134,7 +135,7 @@ public class LocalDateTimeUtils {
         if (date == null){
             return null;
         }
-        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(DATE_FORMATTER);
+        return date.toInstant().atZone(ZONE_ID).toLocalDate().format(DATE_FORMATTER);
     }
 
     /**
@@ -148,7 +149,7 @@ public class LocalDateTimeUtils {
             return null;
         }
 
-        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime().format(DATE_TIME_FORMATTER);
+        return date.toInstant().atZone(ZONE_ID).toLocalDateTime().format(DATE_TIME_FORMATTER);
     }
 
     /**
@@ -160,7 +161,8 @@ public class LocalDateTimeUtils {
         if (timeStamp == null){
             return null;
         }
-        return Date.from(LocalDateTime.ofEpochSecond(timeStamp, 0, ZoneOffset.ofHours(8)).atZone(ZoneId.systemDefault()).toInstant());
+        Instant instant = Instant.ofEpochSecond(timeStamp);
+        return Date.from(instant.atZone(ZONE_ID).toInstant());
     }
     /**
      * LocalDate 转 Date
@@ -171,7 +173,7 @@ public class LocalDateTimeUtils {
         if (localDate == null){
             return null;
         }
-        return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        return Date.from(localDate.atStartOfDay(ZONE_ID).toInstant());
     }
 
     /**
@@ -185,7 +187,7 @@ public class LocalDateTimeUtils {
             return null;
         }
 
-        return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+        return Date.from(localDateTime.atZone(ZONE_ID).toInstant());
     }
 
     /**
@@ -295,7 +297,7 @@ public class LocalDateTimeUtils {
             return null;
         }
 
-        return Date.from(LocalDate.parse(dateStr, DATE_FORMATTER).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        return Date.from(LocalDate.parse(dateStr, DATE_FORMATTER).atStartOfDay(ZONE_ID).toInstant());
 
     }
 
@@ -310,7 +312,7 @@ public class LocalDateTimeUtils {
             return null;
         }
 
-        return Date.from(LocalDateTime.parse(dateStr, DATE_TIME_FORMATTER).atZone(ZoneId.systemDefault()).toInstant());
+        return Date.from(LocalDateTime.parse(dateStr, DATE_TIME_FORMATTER).atZone(ZONE_ID).toInstant());
 
     }
 
@@ -335,7 +337,7 @@ public class LocalDateTimeUtils {
             return null;
         }
 
-        return new Date(millisecond).toInstant().atOffset(ZoneOffset.of("+8")).toLocalDateTime();
+        return new Date(millisecond).toInstant().atOffset(ZONE_ID.getRules().getOffset(Instant.now())).toLocalDateTime();
     }
 
     /**
